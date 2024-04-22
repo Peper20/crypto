@@ -26,3 +26,14 @@ ul li .nav-link:hover{
 .star-always .star{
     filter: invert(67%) sepia(62%) saturate(1205%) hue-rotate(2deg) brightness(106%) contrast(91%);
 }
+
+
+
+
+.my-nav-sq{
+    color: #FFFFFF8C !important;
+}
+
+.active{
+    color: #FFFFFF !important;
+}
