@@ -31,9 +31,9 @@ function Profile(){
 function Navigation({active}){
     return (
         <Nav className="me-auto">
-            <Nav.Link href="/tests" className={active == active_enum.markets ? 'active' : ''}>Рынки</Nav.Link>
-            <Nav.Link href="/groups" className={active == active_enum.trading ? 'active' : ''}>Торговля</Nav.Link>
-            <Nav.Link href="/catalog" className={active == active_enum.square ? 'active' : ''}>Square</Nav.Link>
+            <Nav.Link href="/markets" className={active == active_enum.markets ? 'active' : ''}>Рынки</Nav.Link>
+            <Nav.Link href="/trading" className={active == active_enum.trading ? 'active' : ''}>Торговля</Nav.Link>
+            <Nav.Link href="/square" className={active == active_enum.square ? 'active' : ''}>Square</Nav.Link>
         </Nav>
     )
 }
