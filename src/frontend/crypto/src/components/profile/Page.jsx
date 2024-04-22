@@ -13,7 +13,6 @@ export default function ProfilePage() {
             <Container className='text-light' data-bs-theme="dark">
                 profile
             </Container>
-            
         </>
     )
 }

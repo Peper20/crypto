@@ -15,3 +15,14 @@ ul li .nav-link:hover{
 
     background-color: rgba(255, 255, 255, 0.04);
 }
+.my-hover:hover .star{
+    filter: invert(67%) sepia(62%) saturate(1205%) hue-rotate(2deg) brightness(106%) contrast(91%) !important;
+}
+
+.star{
+    filter: invert(7%) sepia(2%) saturate(4159%) hue-rotate(170deg) brightness(97%) contrast(89%) !important;
+}
+
+.star-always .star{
+    filter: invert(67%) sepia(62%) saturate(1205%) hue-rotate(2deg) brightness(106%) contrast(91%);
+}
