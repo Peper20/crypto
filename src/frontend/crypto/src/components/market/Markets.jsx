@@ -31,11 +31,15 @@ function Coins(){
     return (
         <div className='p-3'>
             <Row className='text-muted'>
-                    <Col xs={3}>Название</Col>
+                    <Col xs={3}>
+                        <Row>
+                            <Col xs={{offset: 1}}>Название</Col>
+                        </Row>
+                    </Col>
                     <Col xs={1} className='text-end'>Цена</Col>
                     <Col xs={2}>Изменение</Col>
-                    <Col xs={2} className='text-center'>Объём за 24ч</Col>
-                    <Col xs={2} className='text-center'>Капитализация</Col>
+                    <Col xs={2} className=''>Объём за 24ч</Col>
+                    <Col xs={2} className=''>Капитализация</Col>
                     <Col xs={2} className='text-end'>Действия</Col>
             </Row>
             <Coin sym={'BTC'} name={'Bitcoin'} price={4231} change={'54%'} volume={30102} cap={8914231}></Coin>
@@ -49,8 +53,13 @@ function Coin({sym, name, price, change, volume, cap}){
     return (
         <Row className='pt-3 pb-3 my-hover br-small rounded'>
             <Col xs={3} className='fw-bold'>
-                {sym}
-                <span className='text-muted ms-1 fw-normal' style={{fontSize: '0.9em'}}>{name}</span>
+                <Row>
+                    <Col xs={1}>*</Col>
+                    <Col>
+                        {sym}<span className='text-muted ms-1 fw-normal' style={{fontSize: '0.9em'}}>{name}</span>
+                    </Col>
+                </Row>
+                
             </Col>
             <Col xs={1} className='text-end'>
                 {price}
@@ -58,10 +67,10 @@ function Coin({sym, name, price, change, volume, cap}){
             <Col xs={2}>
                 {change}
             </Col>
-            <Col xs={2} className='text-center'>
+            <Col xs={2} className=''>
                 {volume}
             </Col>
-            <Col xs={2} className='text-center'>
+            <Col xs={2} className=''>
                 {cap}
             </Col>
             <Col xs={2} className='text-end'>
