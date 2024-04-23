@@ -1,65 +1,105 @@
-from rest_framework import viewsets
-from django.contrib.auth import authenticate
-from django.middleware import csrf
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-from rest_framework.views import APIView
+from django.contrib.auth import get_user_model
+from django.contrib import auth
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_protect
+from django.utils.decorators import method_decorator
+
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework import viewsets, permissions
+from rest_framework.views import APIView
 
 from cryptocurrency.models import CryptoCurrency
+from users.models import UserProfile
 from .serializers import MarketSerializer
 
-
-def get_tokens_for_user(user):
-    refresh = RefreshToken.for_user(user)
-
-    return {
-        "refresh": str(refresh),
-        "access": str(refresh.access_token),
-    }
+User = get_user_model()
 
 
-class LoginView(APIView):
+@method_decorator(csrf_protect, name="dispatch")
+class CheckAuthenticatedView(APIView):
+
+    def get(self, request, format=None):
+        isAuthenticated = User.is_authenticated
+
+        if isAuthenticated:
+            return Response({"isAuthenticated": "success"})
+        else:
+            return Response({"isAuthenticated": "error"})
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class SignupView(APIView):
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, format=None):
-        data = request.data
-        response = Response()
-        username = data.get("username", None)
-        password = data.get("password", None)
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                data = get_tokens_for_user(user)
-                response.set_cookie(
-                    key=settings.SIMPLE_JWT["AUTH_COOKIE"],
-                    value=data["access"],
-                    expires=settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"],
-                    secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
-                    httponly=settings.SIMPLE_JWT["AUTH_COOKIE_HTTP_ONLY"],
-                    samesite=settings.SIMPLE_JWT["AUTH_COOKIE_SAMESITE"])
-                csrf.get_token(request)
-                email_template = render_to_string("login_success.html",
-                                                  {"username": user.username})
-                login = EmailMultiAlternatives(
-                    "Successfully Login",
-                    "Successfully Login",
-                    settings.EMAIL_HOST_USER,
-                    [user.email],
-                )
-                login.attach_alternative(email_template, "text/html")
-                login.send()
-                response.data = {"Success": "Login successfully", "data": data}
+        data = self.request.data
 
-                return response
-            else:
-                return Response({"No active": "This account is not active!!"},
-                                status=status.HTTP_404_NOT_FOUND)
+        password = data["password"]
+        username = data["username"]
+        re_password = data["re_password"]
+
+        if password != re_password:
+            return Response({"error": "Пароли не совпадают"})
+        if User.objects.filter(username=username).exists():
+            return Response({"error": "Такой пользователь уже существует"})
+        user = User.objects.create_user(
+            password=password,
+            username=username,
+        )
+        user.save()
+
+        user = User.objects.get(username=username)
+        user_profile = UserProfile(
+            user=user,
+            first_name="",
+            last_name="",
+            demo_balance=0,
+        )
+        user_profile.save()
+        return Response({"success": "Пользователь успешно создан"})
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class LoginView(APIView):
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, format=None):
+        data = self.request.data
+
+        username = data["username"]
+        password = data["password"]
+        user = auth.authenticate(
+            username=username,
+            password=password,
+        )
+
+        if user is not None:
+            auth.login(request, user)
+            return Response(
+                {
+                    "success": "Пользователь аутентифицирован",
+                    "username": username,
+                },
+            )
         else:
-            return Response({"Invalid": "Invalid username or password!!"},
-                            status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Ошибка аутентификации"})
+
+
+class LogoutView(APIView):
+
+    def post(self, request, format=None):
+        try:
+            auth.logout(request)
+            return Response({"success": "Пользователь успешно разлогинен"})
+        except Exception:
+            return Response({"error": "Ошибка во время выхода"})
+
+
+@method_decorator(ensure_csrf_cookie, name="dispatch")
+class GetCSRFToken(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, format=None):
+        return Response({"success": "CSRF cookie установлен"})
 
 
 class MarketViewSet(viewsets.ModelViewSet):
