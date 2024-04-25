@@ -106,8 +106,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # my settings
 
-AUTH_USER_MODEL = "users.CryptoUser"
-
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "collected_static"
 
@@ -115,22 +113,12 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api.authenticate.CustomAuthentication',
-    ),
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
 }
 
-SIMPLE_JWT = {
-    "AUTH_COOKIE":
-    "access_token",  # Cookie name. Enables cookies if value is set.
-    "AUTH_COOKIE_DOMAIN":
-    None,  # A string like "example.com", or None for standard domain cookie.
-    "AUTH_COOKIE_SECURE":
-    False,  # Whether the auth cookies should be secure (https:// only).
-    "AUTH_COOKIE_HTTP_ONLY":
-    True,  # Http only cookie flag.It"s not fetch by javascript.
-    "AUTH_COOKIE_PATH": "/",  # The path of the auth cookie.
-    "AUTH_COOKIE_SAMESITE":
-    "Lax",  # Whether to set the flag restricting cookie leaks on cross-site requests.
-    # This can be "Lax", "Strict", or None to disable the flag.
-}
+CORS_ORIGIN_ALLOW_ALL = True
