@@ -1,5 +1,4 @@
-from django.urls import path, include, re_path
-from django.views.generic import TemplateView
+from django.urls import path, include
 from rest_framework import routers
 
 from .views import (
@@ -9,10 +8,11 @@ from .views import (
     LogoutView,
     CheckAuthenticatedView,
     LoginView,
+    GetUsersView,
+    UserProfileView,
 )
 
 router_v1 = routers.DefaultRouter()
-router_v1.register(r"market", MarketViewSet, basename="markets")
 
 urlpatterns = [
     path("authenticated/", CheckAuthenticatedView.as_view()),
@@ -20,9 +20,17 @@ urlpatterns = [
     path("csrf_cookie/", GetCSRFToken.as_view()),
     path("logout/", LogoutView.as_view()),
     path("login/", LoginView.as_view()),
+    path("users/", GetUsersView.as_view()),
+    path("my/", UserProfileView.as_view()),
+    path(
+        "market/list/",
+        MarketViewSet.as_view({"get": "list"}),
+        name="market-list",
+    ),
+    path(
+        "market/buy/<int:pk>/",
+        MarketViewSet.as_view({"post": "buy_crypto"}),
+        name="market-buy",
+    ),
     path("", include(router_v1.urls)),
-]
-
-urlpatterns += [
-    re_path(r"^.*", TemplateView.as_view(template_name="index.html")),
 ]

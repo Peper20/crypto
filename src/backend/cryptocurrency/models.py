@@ -4,15 +4,6 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-class CryptoCurrency(models.Model):
-    name = models.CharField(max_length=100)
-    symbol = models.CharField(max_length=10)
-    current_price = models.DecimalField(max_digits=10, decimal_places=2)
-    market_cap = models.DecimalField(max_digits=20, decimal_places=2)
-    volume_24h = models.DecimalField(max_digits=20, decimal_places=2)
-    total_capital = models.DecimalField(max_digits=20, decimal_places=2)
-
-
 class TradingPair(models.Model):
     name = models.CharField(max_length=50)
     base_currency = models.CharField(max_length=10)
@@ -50,3 +41,28 @@ class TradeHistory(models.Model):
     volume = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     traded_at = models.DateTimeField(auto_now_add=True)
+
+
+class CryptoCurrency(models.Model):
+    name = models.CharField(max_length=100)
+    symbol = models.SlugField(max_length=10)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class Portfolio(models.Model):
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+    )
+    crypto_info = models.ManyToManyField(
+        to=CryptoCurrency,
+        through="PortfolioCrypto",
+    )
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class PortfolioCrypto(models.Model):
+    portfolio = models.ForeignKey("Portfolio", on_delete=models.CASCADE)
+    crypto = models.ForeignKey(CryptoCurrency, on_delete=models.CASCADE)
