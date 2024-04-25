@@ -4,6 +4,7 @@ import Tab from 'react-bootstrap/Tab'
 import Tabs from 'react-bootstrap/Tabs'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
+import Button from 'react-bootstrap/Button'
 
 
 
@@ -32,26 +33,74 @@ const coins = [
     {
         sym: 'BTC',
         name: 'Bitcoin',
-        price: '4231',
-        change: '54%',
-        volume: '30102',
-        cap: '8914231',
+        price: '₽6,139,685.06',
+        change: '+0.27%',
+        volume: '₽2 200,87B',
+        cap: '₽120 878,11B',
     },
     {
         sym: 'ETH',
         name: 'Ethereum',
-        price: '4231',
-        change: '54%',
-        volume: '30102',
-        cap: '8914231',
+        price: '₽301,561.88',
+        change: '+2.56%',
+        volume: '₽1 028,94B',
+        cap: '₽36 797,66B',
     },
     {
         sym: 'USDT',
         name: 'Tether',
-        price: '4231',
-        change: '54%',
-        volume: '30102',
-        cap: '8914231',
+        price: '₽92.34',
+        change: '-0.12%',
+        volume: '₽4 776,82B',
+        cap: '₽10 200,67B',
+    },
+    {
+        sym: 'BNB',
+        name: 'BNB',
+        price: '₽56,653.55',
+        change: '+0.31%',
+        volume: '₽131,20B',
+        cap: '₽8 361,40B',
+    },
+    {
+        sym: 'SOL',
+        name: 'Solana',
+        price: '₽14,546.81',
+        change: '+1.50%',
+        volume: '₽287,53B',
+        cap: '₽6 500,61B',
+    },
+    {
+        sym: 'USDC',
+        name: 'USD Coin',
+        price: '₽92.40',
+        change: '+0.05%',
+        volume: '₽542,86B',
+        cap: '₽3 113,54B',
+    },
+    {
+        sym: 'XRP',
+        name: 'Ripple',
+        price: '₽50.29',
+        change: '-0.29%',
+        volume: '₽126,35B',
+        cap: '₽2 773,34B',
+    },
+    {
+        sym: 'DOGE',
+        name: 'Dogecoin',
+        price: '₽14.88',
+        change: '+1.35%',
+        volume: '₽107,52B',
+        cap: '₽2 144,17B',
+    },
+    {
+        sym: 'ADA',
+        name: 'Cardano',
+        price: '₽45.80',
+        change: '-3.88%',
+        volume: '₽36,44B',
+        cap: '₽1 632,28B',
     },
 ]
 
@@ -101,9 +150,10 @@ function Coin({sym, name, price, change, volume, cap}){
                 
             </Col>
             <Col xs={1} className='text-end'>
+                <span className=''></span>
                 {price}
             </Col>
-            <Col xs={2}>
+            <Col xs={2} className={change[0] == '+' ? ' text-success' : 'text-danger'}>
                 {change}
             </Col>
             <Col xs={2} className=''>
@@ -113,7 +163,9 @@ function Coin({sym, name, price, change, volume, cap}){
                 {cap}
             </Col>
             <Col xs={2} className='text-end'>
-                actions
+                <Button variant='outline-success'>
+                    Торговать
+                </Button>
             </Col>
         </Row>
     )

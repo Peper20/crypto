@@ -1,9 +1,7 @@
-import Container from 'react-bootstrap/Container';
-
+import Container from 'react-bootstrap/Container'
 
 import {Header, active_enum} from '../common/MyHeader.jsx'
-
-
+import TradingViewWidget from './Gra.jsx'
 
 
 export default function TradingPage() {
@@ -11,9 +9,17 @@ export default function TradingPage() {
         <>
             <Header active={active_enum.trading}></Header>
             <Container className='text-light' data-bs-theme="dark">
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Velit dolorum tenetur, eius sed necessitatibus optio quasi pariatur labore facilis, ab iste, non reiciendis modi fuga cum ipsa esse? Ipsum, nobis!
-            </Container>
-            
+                <TradingViewWidget></TradingViewWidget>
+            </Container>            
         </>
     )
 }
+
+
+
+
+
+
+
+
+
